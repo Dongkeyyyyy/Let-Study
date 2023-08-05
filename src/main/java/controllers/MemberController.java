@@ -22,7 +22,6 @@ public class MemberController extends HttpServlet {
 			throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html;charset=UTF-8");
-		response.setCharacterEncoding("UTF-8");
 		String cmd = request.getRequestURI();
 		Gson g = new Gson();
 		MembersDAO dao = MembersDAO.getInstance();
@@ -58,7 +57,11 @@ public class MemberController extends HttpServlet {
 					response.getWriter().append(resp);
 				}
 
+<<<<<<< HEAD
 				//회원가입 
+=======
+				// 회원가입
+>>>>>>> 23dc56ecc32cfd30028d212ef39cea8da4df1de9
 			} else if (cmd.equals("/joinMember.member")) {
 				String id = request.getParameter("id");
 				String pw = request.getParameter("pw");
@@ -66,9 +69,14 @@ public class MemberController extends HttpServlet {
 				// 생년월일 값 받아야함
 				String birthYear = request.getParameter("birthYear");
 				String birthMonth = request.getParameter("birthMonth");
+<<<<<<< HEAD
 				int birthDay = Integer.parseInt(request.getParameter("birthDay"));
 				String birthDayStr = String.format("%02d", birthDay);
 				System.out.println("회원가입 날짜 두자리수 입력 결과 :" + birthDayStr);
+=======
+				String birthDay = request.getParameter("birthDay");
+				String birthDayStr = String.format("%02d", Integer.parseInt(birthDay));
+>>>>>>> 23dc56ecc32cfd30028d212ef39cea8da4df1de9
 				// 두자리가 아니면 앞에 0이 붙게함
 				// 생년월일 값 받음
 
@@ -93,6 +101,10 @@ public class MemberController extends HttpServlet {
 			} else if (cmd.equals("/logout.member")) {
 				request.getSession().invalidate();
 				response.sendRedirect("/index.jsp");
+<<<<<<< HEAD
+=======
+
+>>>>>>> 23dc56ecc32cfd30028d212ef39cea8da4df1de9
 				// 아이디 찾기
 			} else if (cmd.equals("/findId.member")) {
 				String name = request.getParameter("name");
@@ -104,6 +116,34 @@ public class MemberController extends HttpServlet {
 				String foundId = dao.findId(name, email, contact);
 				request.setAttribute("foundId", foundId);
 				request.getRequestDispatcher("/member/findIdResult.jsp").forward(request, response);
+<<<<<<< HEAD
+=======
+				// 비밀번호 찾기
+			} else if (cmd.equals("/findPw.member")) {
+				String id = request.getParameter("id");
+				System.out.println("id : " + id);
+				String name = request.getParameter("name");
+				System.out.println("name : " + name);
+				String email = request.getParameter("email");
+				System.out.println("email : " + email);
+				String contact = request.getParameter("contact");
+				System.out.println("contact : " + contact);
+				boolean result = dao.findPw(id, name, email, contact);
+				String data = g.toJson(result);
+				System.out.println("찾고싶은 비밀번호 결과는 " + data);
+				response.getWriter().append(data);
+				// 비밀번호 변경
+			} else if (cmd.equals("/updatePw.member")) {
+				String id = request.getParameter("id");
+				System.out.println(id);
+				String newPw = request.getParameter("newPw");
+				System.out.println("변경 비밀번호" + newPw);
+				// 여기서부터 전송 안됨 (출력 안됨) null이니까?..에러나는데 
+				int result = dao.updatePw(newPw, id);
+				String data = g.toJson(result); 
+				System.out.println(data + "비밀번호 변경 전송");
+				response.getWriter().append(data); 
+>>>>>>> 23dc56ecc32cfd30028d212ef39cea8da4df1de9
 
 				// select 회원정보출력
 			} else if (cmd.equals("/myInfoSelect.member")) {
@@ -127,8 +167,8 @@ public class MemberController extends HttpServlet {
 				MembersDTO dto = new MembersDTO(id, pw, name, birth_date, nickname, contact, email, zipcode,
 						roadAddress, detailAddress, null);
 				dao.update(dto);
-				response.sendRedirect("/myPage/mypageMainForm.jsp");
-
+				request.getSession().setAttribute("loggedNickname", nickname);
+				response.sendRedirect("/myInfoSelect.member");
 				// delete 회원탈퇴
 			} else if (cmd.equals("/memberOut.member")) {
 				String id = (String) request.getSession().getAttribute("loggedID");

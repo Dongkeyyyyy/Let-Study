@@ -28,7 +28,6 @@
         integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
 	 <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
-   
 
 <style>
 * {
@@ -79,29 +78,62 @@
 	border: 0.5px solid #C8C8C9;
 }
 
-.fileRow {
-	height: 45px;
-}
-
-#file {
-	width: 100%;
-	float: right;
-}
-
-input[type=file]::file-selector-button {
-	width: 90px;
-	height: 35px;
-	background-color: #408558;
-	border: none;
-	border-radius: 10px;
-	color: white;
-	cursor: pointer;
-}
 
 #freeboard_img {
 	width:100%;
 	height: 200px;
 }
+
+#freeBoardInsert{
+background-color : #254F4C;
+}
+
+.margin5{
+position:relative;
+float:left;
+height:5px;
+display:block;
+}
+
+#freeboard_img {
+position:relative;
+width:100%;
+height: 200px;
+}
+
+#freeboard_img::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  opacity: 0.5;
+}
+
+#freeboard_img img{
+opacity:0.5;
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+#imgTitle{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1; /* text 요소를 커버 위에 위치시킵니다. */
+  color: white;
+  text-align: center;
+  font-size: 2rem;
+}
+
+
 
 </style>
 
@@ -113,11 +145,22 @@ input[type=file]::file-selector-button {
 
 	<div class="container">
 	<!-- 헤더 -->
-
+	    <c:import url="/board/topMenu.jsp"></c:import>
+	
+   		<!-- 바디 -->
+		<!-- 자유게시판 이미지 -->
 		<div class="row">
-			<div class="col-12 " id="freeboard_img">자유게시판 이미지</div>
+			<div class="col-12 " id="freeboard_img">
+			<a href="/contentList.freeBoard">
+			<img src="/image/freeboardImg.jpg">
+			<h1 id=imgTitle>자유게시판</h1>
+			</a>
+			</div>
 		</div>
-		<!-- 바디 -->
+		<div class="row">
+			<div class="col margin5"></div>
+			<hr style="width: 100%;">
+		</div>
 		<div class="row margin"></div>
 		<div class="row writingHeader">
 			<h3>자유게시판 글쓰기</h3>
@@ -130,7 +173,7 @@ input[type=file]::file-selector-button {
 					<div id="title">
 						<input type="text" placeholder="제목을 입력해주세요" id="titleInput"
 							name="title">
-						<button type="submit" class="btn btn-success">저장</button>
+						<button type="submit" class="btn btn-success" id="freeBoardInsert">저장</button>
 					</div>
 				</div>
 			</div>
@@ -144,7 +187,7 @@ input[type=file]::file-selector-button {
 			</div>
 		</form>
 
-		<div class="col-12" id="footer">푸터입니다.</div>
+		 <c:import url="/board/footer.jsp"></c:import>
 	</div>
 
 	<script>
@@ -169,7 +212,7 @@ input[type=file]::file-selector-button {
              onImageUpload: function (files) {
                  for (let i = 0; i < files.length; i++) {
                      uploadImg(files[i], this);
-                     console.log(this);
+                     console.log("this : "+this);
                  }
              }
          }
@@ -184,10 +227,9 @@ input[type=file]::file-selector-button {
              contentType: false,
              processData: false
          }).done(function (url) {
-             img = JSON.parse(url);
+             url = JSON.parse(url);
              console.log("url : " + url);
-             console.log("img.url : " + img.url);
-             $(summerNote).summernote("insertImage", img.url);
+             $(summerNote).summernote("insertImage", url);
          });
      }
 	</script>

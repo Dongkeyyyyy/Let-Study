@@ -116,4 +116,39 @@ public class StudyBoardMembersDAO {
 		}
 	}
 	
+	public int updateguestcount(StudyBoardMembersDTO dto) throws Exception{
+		String sql = "select count(*) from studyboardmembers where boardseq = ? and yorn = 'Y'";
+		try(
+				Connection con = this.getConnection();
+				PreparedStatement pstat = con.prepareStatement(sql);
+				){
+			pstat.setInt(1, dto.getBoard_seq());
+			try(
+					ResultSet rs = pstat.executeQuery();
+					){
+				int result = 0;
+				if(rs.next()) {
+					result = rs.getInt(1);
+				}
+				return result+1;
+			}
+		}
+	}
+	
+	public boolean multiapply(StudyBoardMembersDTO dto) throws Exception{
+		String sql = "select * from studyboardmembers where id=? and boardseq=?";
+		try(
+				Connection con = this.getConnection();
+				PreparedStatement pstat = con.prepareStatement(sql);
+				){
+			pstat.setString(1, dto.getId());
+			pstat.setInt(2, dto.getBoard_seq());
+			try(
+					ResultSet rs = pstat.executeQuery();
+					){
+				return rs.next();
+			}
+		}
+	}
+	
 }

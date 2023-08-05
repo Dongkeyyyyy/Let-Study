@@ -12,23 +12,47 @@
         integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
         crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.js"></script>
+    <script src="https://kit.fontawesome.com/09115628a5.js" crossorigin="anonymous"></script>
 	<script type="text/javascript"
         src="//dapi.kakao.com/v2/maps/sdk.js?appkey=4d79f132798324278c93739a54ae859c&libraries=services"></script>
-    <style>
     <style>
         * {
             box-sizing: border-box;
         }
 
         div {
-            border: 1px solid black;
             position: relative;
         }
+        
+        h3{
+        	background-color : white;
+        	border: 1px solid #254f4c;
+        	display: inline-block;
+        	word-break: break-all;
+        }
+        
+        h3:empty:before {
+  			content:attr(data-placeholder);
+  			color:gray;
+		}
+		
+		.header{
+			position: relative;
+        	border-radius:5px;
+        	background-color : white;
+		}
+        
+        .body{
+        	border-radius:5px;
+        	background-color : white;
+        }
+        
 
         #studyprint {
             margin-top: 12px;
             margin-bottom: 12px;
             border-radius: 100%;
+            border: 1px solid black;
         }
 
         .studyguestprint {
@@ -41,9 +65,7 @@
             padding: 0px;
             position: relative;
             overflow: hidden;
-        }
-        .header{
-            position: relative;
+            background-color: white;
         }
         .navi {
             position:sticky;
@@ -81,9 +103,19 @@
         #btnbox {
             text-align: right;
         }
+        
+        .btns{
+        	border: 1px solid black;
+			background-color: white;
+			border-radius: 5px;
+		}
 
         #replyfont {
             font-weight: 900;
+        }
+        
+        #guestcount{
+        	width:32%;
         }
 
         #replywritebox {
@@ -100,86 +132,121 @@
             right: 5px;
             bottom: 5px;
         }
+        
+        #opendetailcontents{
+        	border: 1px solid black;
+        	word-break: break-all;
+        }
+        
+        #opencontents{
+        	border: 1px solid #254f4c;
+        	background-color:white;
+        	display: inline-block;
+        	word-break: break-all;
+        }
+        
+        #opencontents:empty:before {
+        	content:attr(data-placeholder);
+  			color:gray;
+        }
+        
+        .mapbox{
+        	padding-top:2%;
+        	padding-left:3%;
+        }
+        
+        .detailinfo{
+        	padding-top:2%;
+        	padding-left:3%;
+        	padding-right:5%;
+        }
+        #freeboard_img {
+position:relative;
+width:100%;
+height: 200px;
+}
+
+#freeboard_img::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  opacity: 0.5;
+}
+
+#freeboard_img img{
+/* object-position : center -370px; */
+opacity:0.5;
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+#imgTitle{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1; /* text 요소를 커버 위에 위치시킵니다. */
+  color: white;
+  text-align: center;
+  font-size: 2rem;
+}
+.margin {
+	height: 28px;
+}
     </style>
 </head>
 
-<body>
+<body style="background-color : #f3f3f3">
     <div class="container">
-        <div class="row navi">
-            <div class="col-12">
-                <div class="row">
-
-                    <div class="col-6 col-lg-2 order-2 order-lg-first">
-                        logo
-                    </div>
-                    <div class="col-lg-4 d-none d-lg-block order-lg-1">
-                        여백
-                    </div>
-                    <div class="col-4 d-block d-lg-none order-1">
-                        <div class="row">
-                            <div class="col-6">
-                                <div class="row">
-                                    <div class="col-12">
-                                        네비햄버거
-                                    </div>
-                                    <div class="col-12">회원가입</div>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="row">
-                                    <div class="col-12 subsearch">검색</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-1 d-none d-lg-block order-lg-2">
-                        <button type="button" class="btn btn-primary btn-lg">hi</button>
-                    </div>
-                    <div class="col-lg-1 d-none d-lg-block order-lg-3">
-                        <button type="button" class="btn btn-primary btn-lg">hi</button>
-                    </div>
-                    <div class="col-lg-1 d-none d-lg-block order-lg-4">
-                        <button type="button" class="btn btn-primary btn-lg">hi</button>
-                    </div>
-                    <div class="col-lg-1 d-none d-lg-block order-lg-5">
-                        <button type="button" class="btn btn-primary btn-lg">hi</button>
-                    </div>
-                    <div class="col-lg-2 d-none d-lg-block  order-lg-last">
-                        ㅎㅇ
-                    </div>
-                    <div class="col-2 d-block d-lg-none order-last">
-                        <div class="row">
-                            <div class="col-12">공백</div>
-                            <div class="col-12">로그인</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    
+        <c:import url="/board/topMenu.jsp"></c:import>
+        <div class="row">
+			<div class="col-12 " id="freeboard_img">
+			<a href="/select.studyboard">
+			<img src="/image/study.jpg" id="picture">
+			<h1 id=imgTitle>스터디 모임 게시판</h1>
+			</a>
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col margin"></div>
+		</div>
+		
         <form action="/insert.studyboard" method="post" id="insertForm">
         	<div class="row header">
             	<div class="col-12">
                 	<div class="row">
                     	<div class="col-2">
                         	<div class="ratio ratio-1x1" id="studyprint">
-                            	<img src="행복해요.gif" class="imgs">
                         	</div>
                     	</div>
                     	<div class="col-10">
                         	<div id="studybtnbox">
-                            	<h3 contenteditable="true" id="opentitle">스터디 이름</h3>
+                            	<h3 contenteditable="true" id="opentitle" data-placeholder="스터디 이름을 입력하세요."></h3>
                             	<input type="hidden" name="title" id="hiddentitle">
-                            	<div contenteditable="true" id="opencontents"></div>
+                            	<br>
+                            	<div contenteditable="true" id="opencontents" data-placeholder="스터디를 소개해주세요."></div>
                             	<input type="hidden" name="contents" id="hiddencontents">
                         	</div>
                     	</div>
                 	</div>
             	</div>
         	</div>
+        	<br>
         	<div class="row body">
-            	<div class="col-3">
+            	<div class="col-3 mapbox">
                 	<div class="row">
                     	<div class="col-12">
+                    		약속장소를 설정해주세요.
                         	<div class="ratio ratio-1x1">
                         		<div id="map" style="width:100%;height:100%"></div>
                         	</div>
@@ -188,40 +255,68 @@
                 	<div class="row">
                     	<div class="col-12">
                     		<input type="text" placeholder="주소입력" name="mapname" id="target" required>
-                    		<input type="button" value="검색" id="mapsearch">
+                    		<input type="button" value="검색" id="mapsearch" class="btns">
                     		<input type="hidden" name="lat" value="위도" id="Lat" required>
                     		<input type="hidden" name="lng" value="경도" id="Lng" required>
                     	</div>
                 	</div>
             	</div>
-            	<div class="col-6">
+            	<div class="col-9 detailinfo">
             		상세 내역<br>
-            		<div contenteditable="true" id="opendetailcontents"></div>
+            		참여 인원수 : 
+            		<input type="text" placeholder="참여인원을 숫자로 적어주세요.(1~19)" name="guestcount" id="guestcount">
+            		<br><br>
+            		<div contenteditable="true" id="opendetailcontents">
+            			연령 : <br>
+            			지역 : <br>
+            			시간 : <br>
+            		</div>
             	</div>
             	<input type="hidden" name="detailcontents" id="hiddendetailcontents">
-            	<div class="col-3 p-0">
-                	<div class="row m-0">
-                    	<div class="col-12 ratio" style="--bs-aspect-ratio: 130%;">
-                        	<div class="row m-0" id="applybox">
-                        	</div>
-                    	</div>
-                	</div>
-            	</div>
             	<div class="col-12" id="btnbox">
-                	<button type="submit">작성 완료</button>
-                	<a href="/select.studyboard?cpage=1"><button type="button">목록으로</button></a>
+                	<button type="submit" class="btns">작성 완료</button>
+                	<a href="/select.studyboard?cpage=1"><button type="button" class="btns">목록으로</button></a>
             	</div>
         	</div>
         </form>
+        <br>
         <div class="row footer">
-            <div class="col-12">아래 대충 띄어놓기</div>
+        <c:import url="/board/footer.jsp"></c:import>
         </div>
     </div>
     <script>
+    	let regexguestcount = /^[1]{0,1}[0-9]{1}$/;
     	$("#insertForm").on("submit",function(){
     		$("#hiddentitle").val($("#opentitle").html());
     		$("#hiddencontents").val($("#opencontents").html());
     		$("#hiddendetailcontents").val($("#opendetailcontents").html());
+    		if($("#guestcount").val()==""){
+    			alert("참여 인원을 적어주세요.");
+    			return false;
+    		}
+    		let guestcount = $("#guestcount").val();
+            let resultguestcount = regexguestcount.test(guestcount);
+            console.log(resultgeustcount);
+    		if($("#hiddentitle").val()==""){
+    			alert("제목을 입력해주세요.");
+    			return false;
+    		}
+    		if($("#hiddencontents").val()==""){
+    			alert("내용을 입력해주세요.");
+    			return false;
+    		}
+    		if($("#hiddendetailcontents").val()==""){
+    			alert("상세내용을 입력해주세요.");
+    			return false;
+    		}
+    		if($("#Lat").val()=="위도"){
+    			alert("위치를 지정해주세요.");
+    			return false;
+    		}
+    		if(!resultguestcount){
+    			alert("참여인원수를 다시확인해주세요.");
+                return false;
+    		}
     	})
     </script>
     <script>
@@ -267,6 +362,45 @@
                 }
             });
         });
+        
+   	 $(window).on("load", function () {
+   		 const bodySize = parseInt($("body").css("width"));
+   		 if (bodySize > 1399) {
+   	            $("#picture").css("object-position", "center -370px");
+   	        }
+   		 else if (bodySize <= 1399 && bodySize > 1199){
+   			 $("#picture").css("object-position", "center -305px");
+   		 }
+   		 else if (bodySize <= 1199 && bodySize > 991){
+   			 $("#picture").css("object-position", "center -250px");
+   		 }
+           else if (bodySize <= 991){
+           	$("#picture").css("object-position", "center -155px");
+           }
+           else if (bodySize <=767){
+           	$("#picture").css("object-position", "center -95px");
+           }
+        });
+   	
+   	addEventListener("resize", function (event) {
+   		const bodySize = parseInt($("body").css("width"));
+           if (bodySize > 1399) {
+               $("#picture").css("object-position", "center -370px");
+           }
+           else if (bodySize <= 1399 && bodySize > 1199){
+   			 $("#picture").css("object-position", "center -305px");
+   		 }
+           else if (bodySize <= 1199 && bodySize > 991){
+   			 $("#picture").css("object-position", "center -250px");
+   		 }
+           else if (bodySize <= 991 && bodySize > 767){
+           	$("#picture").css("object-position", "center -155px");
+           }
+           else if (bodySize <=767){
+           	$("#picture").css("object-position", "center -95px");
+           }
+   	});
+   	
     </script>
 </body>
 </html>

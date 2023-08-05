@@ -64,17 +64,6 @@
 	margin-top: 15px;
 }
 
-.header {
-	position: relative;
-}
-
-.navi {
-	position: sticky;
-	top: 0;
-	background-color: white;
-	z-index: 999;
-}
-
 .margin {
 	height: 28px;
 }
@@ -85,6 +74,7 @@
 
 .table {
 	width: 100%;
+	min-height:350px;
 }
 
 .writeBtnRow {
@@ -96,6 +86,9 @@
 	position: relative;
 	top: 10%;
 	height: 35px;
+}
+#writeBtn{
+background-color : #254F4C;
 }
 
 .center {
@@ -124,6 +117,44 @@ a {
 float:left;
 }
 
+#freeboard_img {
+position:relative;
+width:100%;
+height: 200px;
+}
+
+#freeboard_img::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  opacity: 0.5;
+}
+
+#freeboard_img img{
+opacity:0.5;
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+#imgTitle{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1; /* text 요소를 커버 위에 위치시킵니다. */
+  color: white;
+  text-align: center;
+  font-size: 2rem;
+}
+
 
 </style>
 
@@ -137,10 +168,17 @@ float:left;
                 <!-- 헤더 네비 -->
                 <c:import url="/board/topMenu.jsp"></c:import>
 		<!-- 바디 -->
-
 		<!-- 자유게시판 이미지 -->
 		<div class="row">
-			<div class="col-12 " id="freeboard_img">자유게시판 이미지</div>
+			<div class="col-12 " id="freeboard_img">
+			<a href="/contentList.freeBoard">
+			<img src="/image/freeboardImg.jpg">
+			<h1 id=imgTitle>자유게시판</h1>
+			</a>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col "></div>
 		</div>
 		<!--검색 바  -->
 		<form action="/searchByOption.freeBoard" method="post">
@@ -170,7 +208,7 @@ float:left;
 		</div>
 		</form>
 		<!-- 자유게시판 리스트 -->
-		<div class="row margin"></div>
+		<div class="row "></div>
 		<table class="table">
 			<thead class="table-light">
 				<tr class="row">
@@ -198,40 +236,73 @@ float:left;
 		<div class="row writeBtnRow">
 			<div class="col writeBtnCol">
 				<a href="/freeBoard/FreeBoardWriteForm.jsp">
-					<button type="button" class="btn btn-success">글쓰기</button>
+					<button type="button" class="btn btn-success" id="writeBtn" >글쓰기</button>
 				</a>
 			</div>
 		</div>
 		<!-- 페이지 네비 -->
 
-			<nav aria-label="Page navigation example ">
-                  <ul class="pagination d-flex justify-content-center">
-                     <c:forEach var="i" items="${navi}">
-                        <c:choose>
-                           <c:when test="${i eq '<<'}">
-                              <li class="page-item"><a class="page-link" href="/contentList.freeBoard?cpage=${start}">${i}</a></li>
-                           </c:when>
-                           <c:when test="${i eq '<'}">
-                              <li class="page-item"><a class="page-link" href="/contentList.freeBoard?cpage=${cpage-1}">${i}</a></li>
-                           </c:when>
-                           <c:when test="${i eq '>'}">
-                              <li class="page-item"><a class="page-link" href="/contentList.freeBoard?cpage=${cpage+1}">${i}</a></li>
-                           </c:when>
-                           <c:when test="${i eq '>>'}">
-                              <li class="page-item"><a class="page-link" href="/contentList.freeBoard?cpage=${end}">${i}</a></li>
-                           </c:when>
-                           <c:otherwise>
-                              <li class="page-item"><a class="page-link" href="/contentList.freeBoard?cpage=${i}">${i}</a></li>
-                           </c:otherwise>
-                        </c:choose>
-                     </c:forEach>
-                  </ul>
-               </nav>
+			<nav aria-label="Page navigation example" align="center">
+  <ul class="pagination d-flex justify-content-center">
+    <c:forEach var="i" items="${navi}">
+      <c:choose>
+        <c:when test="${i eq '<<'}">
+          <li class="page-item"><a class="page-link" href="/contentList.freeBoard?cpage=${start}">${i}</a></li>
+        </c:when>
+        <c:when test="${i eq '<'}">
+          <li class="page-item"><a class="page-link" href="/contentList.freeBoard?cpage=${cpage - 1}">${i}</a></li>
+        </c:when>
+        <c:when test="${i eq '>'}">
+          <li class="page-item"><a class="page-link" href="/contentList.freeBoard?cpage=${cpage + 1}">${i}</a></li>
+        </c:when>
+        <c:when test="${i eq '>>'}">
+          <li class="page-item"><a class="page-link" href="/contentList.freeBoard?cpage=${end}">${i}</a></li>
+        </c:when>
+        <c:otherwise>
+          <li class="page-item">
+            <a class="page-link ${i == cpage ? 'current-page' : ''}" 
+               href="/contentList.freeBoard?cpage=${i}" 
+               ${i == cpage ? "disabled" : ""} 
+               onclick="${i == cpage ? "event.preventDefault()" : ""}" >
+              ${i}
+            </a>
+          </li>
+        </c:otherwise>
+      </c:choose>
+    </c:forEach>
+  </ul>
+</nav>
 
+<script>
+  var currentPage = ${cpage}; // 현재 페이지 번호
+  var pageLinks = document.querySelectorAll(".page-link"); // 페이지 링크 요소들을 가져옴
+
+  for (var i = 0; i < pageLinks.length; i++) {
+    // 페이지 링크 요소들에 클릭 이벤트를 추가
+    pageLinks[i].addEventListener("click", function(event) {
+      if (parseInt(event.target.textContent) === currentPage) {
+        // 현재 페이지 번호와 클릭한 페이지 번호가 같으면 클릭 이벤트를 막음
+        event.preventDefault();
+        
+      } else {
+        // 현재 페이지 번호와 클릭한 페이지 번호가 다르면 링크를 따라 이동
+        window.location.href = event.target.getAttribute("href");
+      }
+      
+    });
+  }
+  
+  const currentPage2 = document.querySelector('.current-page');
+  currentPage2.style.backgroundColor = '#1e3c3e';
+  currentPage2.style.color = 'white';
+  
+</script>
 		<!-- 푸터 -->
-		<div class="block text-center" id="footer"></div>
-
+		 <c:import url="/board/footer.jsp"></c:import>
 	</div>
+	
+	
+	
 </body>
 
 </html>

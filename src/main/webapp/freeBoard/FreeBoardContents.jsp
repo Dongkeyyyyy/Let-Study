@@ -35,18 +35,6 @@
 	/* border: 1px solid grey; */
 }
 
-.header {
-	position: relative;
-}
-
-.navi {
-	position: sticky;
-	top: 0;
-	background-color: white;
-	z-index: 999;
-}
-
-
 
 .reply_text {
 	height: 50px;
@@ -164,7 +152,7 @@
 
 .replyInsertBtn{
 border : none;
-background-color : green;
+background-color : #254F4C;
 font-size : 15px;
 color : white;
 width: 60px;
@@ -206,13 +194,48 @@ margin-right:10px;
 .margin{
 position:relative;
 float:left;
-height: 10%;
+height:5px;
 display:block;
 }
 
 #freeboard_img {
+position:relative;
 width:100%;
-height: 300px;
+height: 200px;
+}
+
+#freeboard_img::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  opacity: 0.5;
+}
+
+#freeboard_img img{
+opacity:0.5;
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+#imgTitle{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1; /* text 요소를 커버 위에 위치시킵니다. */
+  color: white;
+  text-align: center;
+  font-size: 2rem;
+
+
 }
 </style>
 
@@ -221,16 +244,23 @@ height: 300px;
 <body>
 	<div class="container">
 		<!-- 헤더 -->
+		     <c:import url="/board/topMenu.jsp"></c:import>
 		<!-- 자유게시판 이미지 -->
+		
 		<div class="row">
 			<div class="col-12 " id="freeboard_img">
-			
+			<a href="/contentList.freeBoard">
+			<img src="/image/freeboardImg.jpg">
+			<h1 id=imgTitle>자유게시판</h1>
+			</a>
 			</div>
 		</div>
+				
 		
 		<!-- 바디 -->
 		<div class="row">
 			<div class="col margin"></div>
+			<hr style="width: 100%;">
 		</div>
 		<form action="/update.freeBoard" method="post" >
 			<div class="row rowTitle">
@@ -267,8 +297,7 @@ height: 300px;
 					<c:choose>
 						<c:when test="${sessionScope.loggedID eq list.writer}">
 							<input type="button" value="수정" id="updateBtn">
-							<a href="delete.freeBoard?seq=${list.seq}"> <input
-								type="button" value="삭제">
+							 <input type="button" value="삭제" onclick="delContent()">
 							</a>
 						</c:when>
 					</c:choose>
@@ -292,9 +321,7 @@ height: 300px;
 									<c:when test="${sessionScope.loggedID eq i.writer}">
 										<input type="button" class="noBorderBtn replyUpdate"
 											value="댓글수정">
-										<a href="/delete.reply?seq=${list.seq}&replySeq=${i.seq}">
-											<input type="button" class="noBorderBtn" value="댓글삭제">
-										</a>
+											<input type="button" class="noBorderBtn replyDel" value="댓글삭제" seq="${i.seq}">
 										<input type="submit" class="noBorderBtn" value="수정완료"
 											style="display: none">
 									</c:when>
@@ -318,9 +345,9 @@ height: 300px;
 					placeholder="댓글을 입력해주세요"> <input type=button class="replyInsertBtn" value="등록"
 					id="replyInsert">
 			</div>
-
+	<hr style="width: 100%;">
 		</div>
-		<div class="col-12" id="footer">푸터입니다.</div>
+		 <c:import url="/board/footer.jsp"></c:import>
 	</div>
 	</div>
 
@@ -385,11 +412,14 @@ height: 300px;
 			$("#content").css("display","none");
 			$("#updateBtn").hide();
 
+			$(".reply_area").hide();
+			$(".ReplyInputRow").hide();
+			
 			let updateComplete = $("<button>");
 			updateComplete.text("수정완료");
 			updateComplete.attr("type", "submit");
 			updateComplete.css({
-				'background-color': 'green',
+				'background-color': '#254F4C',
 				'color':'white',
 				'font-weight':'bold',
 				'border': 'none',
@@ -423,22 +453,63 @@ height: 300px;
 			$(this).next().next().css("display", "inline-block");
 			
 		})
-
-		/* 파일 삭제  */
-		$(".fileDel").on("click", function() {
-			var $target = $(event.target);
-			$.ajax({
-				url : "/delete.file",
-				dataType : "json",
-				type : "post",
-				data : {
-					file_seq : $("#file_seq").val(),
-					board_seq : $("#board_seq").val()
-				}
-			}).done(function(resp) {
-				$target.parent("div").remove();
-			});
+		
+		/* 댓글 삭제 확인  */
+		$(".replyDel").on("click", function(){
+			let replySeq = $(this).attr("seq");
+			console.log(replySeq);
+			if(confirm("댓글을 삭제하시겠습니까?")){
+				alert("삭제 완료되었습니다.");
+				location.href = "/delete.reply?seq=${list.seq}&replySeq="+replySeq;
+			}
 		})
+		
+		
+		/* 게시글 삭제 확인 */
+		function delContent(){
+			if(confirm("게시글을 삭제하시겠습니까?")){
+				alert("삭제 완료되었습니다.");
+				location.href="delete.freeBoard?seq=${list.seq}";
+			}
+		}
+		
+		
+		/* 헤더이벤트 */
+		  $("#subsearchclick").on("click", function () {
+                if ($("#subsearch").css("display", "none")) {//돋보기있는 div
+                    $("#subsearchback").css("display", "block")//검색창있는 div
+                }
+            })
+            $("#searsubback").on("click", function () {
+                if ($("#subsearchback").css("display", "none")) {//돋보기있는 div
+                    $("#subsearch").css("display", "block");//검색창있는 div
+                }
+            })
+            var hamberger = document.querySelector("#hamberger");
+            var navisub = document.querySelector(".navisub");
+            navisub.style.display = "none";
+
+            hamberger.addEventListener("click", function () {
+                if (navisub.style.display === "block") {
+                    navisub.style.display = "none";
+                } else {
+                    navisub.style.display = "block";
+                }
+            });
+
+            addEventListener("resize", function (event) {
+                const bodySize = parseInt($("body").css("width"));
+                if (bodySize > 992) {
+                    const navisub = $(".navisub");
+                    const divsearch = $("#subsearchback")
+                    const addsearch = $("#subsearch")
+                    if (navisub.css("display") == "block") {
+                        navisub.css("display", "none");
+                    }
+                    addsearch.css("display", "block")
+                    divsearch.css("display", "none")
+                }
+            });
 		
 	</script>
 </body>
